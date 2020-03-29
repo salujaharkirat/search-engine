@@ -24,14 +24,16 @@ def get_books(request):
   queries = load_data.get("queries")
   k = load_data.get("k")
 
-  if not queries:
+  if not queries or not len(queries):
     raise ValidationError("Please pass list of queries...")
+
+  if not isinstance(queries, list):
+    queries = [queries]
 
   if not k:
     raise ValidationError("Please pass number of results required...")
 
   si = SearchIndex()
-  si.add()
   result = []
   author_map = {}
   for query in queries:
@@ -48,7 +50,6 @@ def get_books(request):
     cache_data = cache.get(key)
     if cache_data:
       data = cache_data
-      print("fetching from redis")
     else:
       data = requests.post(url = AUTHOR_API_END_POINT, data=payload, headers=HEADERS).json()
       cache.set(key, data)
