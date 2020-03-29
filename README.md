@@ -10,7 +10,6 @@
   6. python manage.py runserver
   7. pytest
 
-
 ## Points to note
 
   1. Please make sure that the redis server is running on port 6379
