@@ -5,6 +5,7 @@ from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import ValidationError
+from django.core.cache import cache
 import requests
 # Create your views here.
 import json
@@ -43,7 +44,14 @@ def get_books(request):
     payload = json.dumps({
       "book_id": int(key)
     })
-    data = requests.post(url = AUTHOR_API_END_POINT, data=payload, headers=HEADERS).json()
+
+    cache_data = cache.get(key)
+    if cache_data:
+      data = cache_data
+      print("fetching from redis")
+    else:
+      data = requests.post(url = AUTHOR_API_END_POINT, data=payload, headers=HEADERS).json()
+      cache.set(key, data)
     author_map[key] = data['author']
 
   for row in result:
