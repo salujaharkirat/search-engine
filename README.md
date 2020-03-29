@@ -8,6 +8,7 @@
   4. python manage.py migrate
   5. python -m utils.prepare_mock
   6. python manage.py runserver
+  7. pytest
 
 
 ## Points to note
