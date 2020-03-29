@@ -289,8 +289,8 @@ class SearchIndex:
   def add(self):
     # TODO: Check for substring
     for data in summaries:
-      self._summary['id'] = data['summary']
       id = str(data['id'])
+      self._summary[id] = data['summary']
       for word in data['summary'].split():
         if word in self._index:
           if id in self._index[word]:
@@ -319,11 +319,11 @@ class SearchIndex:
     result = list(sorted_reverse_map)[:k]
     final_result = []
     for element in result:
-      id = int(element[0])
+      id = str(element[0])
       final_result.append({
         "id": id,
-        "summary": self._summary['id'],
-        "title": titles[id]
+        "summary": self._summary[id],
+        "title": titles[int(id)]
       })
     return final_result
 
@@ -337,11 +337,5 @@ class SearchIndex:
         query_map[datum] = 1
 
     return self.get_relevant_data(query_map, k)
-
-
-
-si = SearchIndex()
-si.add()
-print(si.search("is your problems", 3))
 
 
